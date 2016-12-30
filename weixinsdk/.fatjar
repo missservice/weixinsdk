@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Tue May 31 11:35:08 CST 2016
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=weixin_sdk.jar
+manifest.mergeall=true
+manifest.mainclass=
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<jar|annotations-api.jar>;<jar|catalina-ant.jar>;<jar|catalina-ha.jar>;<jar|catalina-tribes.jar>;<jar|catalina.jar>;<jar|el-api.jar>;<jar|jasper-el.jar>;<jar|jasper-jdt.jar>;<jar|jasper.jar>;<jar|jsp-api.jar>;<jar|servlet-api.jar>;<jar|tomcat-coyote.jar>;<jar|tomcat-dbcp.jar>;<jar|tomcat-i18n-es.jar>;<jar|tomcat-i18n-fr.jar>;<jar|tomcat-i18n-ja.jar>;<jar|commons-codec-1.6.jar>;<jar|commons-lang-2.5.jar>;<jar|commons-logging-1.1.1.jar>;<jar|dom4j-1.6.1.jar>;<jar|fastjson-1.1.26.jar>;<jar|httpclient-4.3.3.jar>;<jar|httpcore-4.3.2.jar>;<jar|httpmime-4.3.3.jar>;<jar|slf4j-api-1.6.0.jar>
+includes=

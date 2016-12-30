@@ -1,0 +1,120 @@
+一、具体可以参考 byts的项目
+   1、配置好weixin.properties，配置好，相关的微信配置，参考：微信平台配置目录
+   2、Key.java中添加获取properties的文件功能
+   3、urlrewrite.xml增加相关配置
+   <!-- 微信 BEGIN -->
+	<outbound-rule>
+		<from>/weixin/WeixinLogin.do\?method=weixin$</from>
+		<to>/weixin/loginweixin.html</to>
+	</outbound-rule>
+	<rule>
+		<from>^/weixin/loginweixin.html$</from>
+		<to>/weixin/WeixinLogin.do?method=weixin</to>
+	</rule>
+	
+	<outbound-rule>
+		<from>/weixin/WeixinLogin.do\?method=pay1Fen$</from>
+		<to>/weixin/pay1fen.html</to>
+	</outbound-rule>
+	<rule>
+		<from>^/weixin/pay1fen.html$</from>
+		<to>/weixin/WeixinLogin.do?method=pay1Fen</to>
+	</rule>
+	
+	<outbound-rule>
+		<from>/weixin/WeixinLogin.do\?method=pay1FenNative$</from>
+		<to>/weixin/pay1fennative.html</to>
+	</outbound-rule>
+	<rule>
+		<from>^/weixin/pay1fennative.html$</from>
+		<to>/weixin/WeixinLogin.do?method=pay1FenNative</to>
+	</rule>
+	
+ 	<outbound-rule>
+		<from>/weixin/WeixinLogin.do(.*)$</from>
+		<to>/weixin/login.html$1</to>
+	</outbound-rule>
+	<rule>
+		<from>^/weixin/login.html(.*)$</from>
+		<to>/weixin/WeixinLogin.do$1</to>
+	</rule>
+	<!-- 微信  END -->
+	<!-- 超时  -->
+ 	<outbound-rule>
+		<from>/IndexTimeout.do$</from>
+		<to>/timeout.html</to>
+	</outbound-rule>
+	<rule>
+		<from>^/timeout.html$</from>
+		<to>/IndexTimeout.do</to>
+	</rule>
+	<!-- 超时  -->
+	
+	
+	4、web.xml中，增加相关微信配置和增加strutsConfig-weixin.xml
+	<init-param>
+		<param-name>config/weixin</param-name>
+		<param-value>/WEB-INF/config/struts/strutsConfig-weixin.xml</param-value>
+	</init-param>
+	
+	<!-- weixin BEGIN -->
+	<servlet>
+		<description>微信服务器消息处理,由微信服务器回调</description>
+		<servlet-name>weixinApi</servlet-name>
+		<servlet-class>com.aiisen.weixin.ApiServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>weixinApi</servlet-name>
+		<url-pattern>/weixin/api.html</url-pattern>
+	</servlet-mapping>
+	<!-- weixin END -->
+	<!-- 注册用户 -->
+	<filter>
+		<filter-name>customerFilter</filter-name>
+		<filter-class>com.ebiz.webapp.web.filter.SimpleAuthenticateFilter</filter-class>
+		<init-param>
+			<param-name>sessionKey</param-name>
+			<param-value>userInfo</param-value>
+		</init-param>
+		<init-param>
+			<param-name>userType</param-name>
+			<param-value>2</param-value>
+		</init-param>
+		<init-param>
+			<param-name>loginPage</param-name>
+			<!-- 主要修改这里 -->
+			<param-value>/timeout.html</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>customerFilter</filter-name>
+		<url-pattern>/manager/customer/*</url-pattern>
+	</filter-mapping>
+	<!-- 注册用户 -->
+	
+	
+	5、具体支付代码参考IndexPaymentAction.java(PC端) 和 MIndexPaymentAction.java（wap端）
+	6、将com.ebiz.webapp.web.struts.weixin目录的所有文件拷贝到项目中
+	7、配置filter
+	8、增加tomeoutaction,并修改web.xml配置文件
+	9、将weixin的目录文件拷贝，将index/IndexPayment页面拷贝，将index/pay/下面的页面拷贝
+	
+	
+二、扫描支付特殊设置：
+   1、拷贝qrcode_swetake.jar，生成二维码用
+   2、拷贝QRCodeUtils.java ，生成二维码用
+   3、拷贝QrCodeServlet.java，生成二维码用
+   4、web.xml 配置Servlet：
+   	<servlet>
+		<servlet-name>QrCodeServlet</servlet-name>
+		<servlet-class>com.ebiz.webapp.web.servlet.QrCodeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>QrCodeServlet</servlet-name>
+		<url-pattern>/QrCodeForWeixin.jpg</url-pattern>
+	</servlet-mapping>
+	5、CsAJax继承下 BaseCsAjaxAction，在BaseCsAjaxAction添加waitBindWeixin，waitIsPay方法
+	6、拷贝扫描支付相关页面和样式
+	/byts/WebContent/index/IndexPayment/pay_weixin.jsp
+	/byts/WebContent/index/IndexPayment/pay_weixin_not_bind.jsp
+	<link href="${ctx}/styles/payment/main.css" rel="stylesheet" type="text/css" />
